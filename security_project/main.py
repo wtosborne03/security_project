@@ -42,10 +42,11 @@ class LogHandler(FileSystemEventHandler):
             print(f'Log file modified: {event.src_path}')
             new_logs = parse_log(event.src_path)
             new_logs = clean_data(new_logs)
-            log_df = pd.concat([log_df, new_logs], ignore_index=True)
-            log_df = kmeans_clustering(log_df)
-            log_df = isolation_forest(log_df)
-            alert(log_df)
+            if not new_logs.empty:
+                log_df = pd.concat([log_df, new_logs], ignore_index=True)
+                log_df = kmeans_clustering(log_df)
+                log_df = isolation_forest(log_df)
+                alert(log_df)
 
 def start_monitoring(log_path):
     observer = Observer()
